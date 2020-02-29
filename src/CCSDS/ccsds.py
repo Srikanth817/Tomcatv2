@@ -238,20 +238,19 @@ class ccsds(object):
 
         return data_len
 
-    def ccsds_hex_to_data_binary(self,file):
+    def ccsds_hex_to_data_binary(self,ccsds_hex_string):
         """
-        Takes the string input of a ccsds packet txt file and outputs the 
+        Takes the hex string input of a ccsds packet and outputs the 
         raw data from the packet in string binary form
         """
 
-        ccsds_hex_string = self.read_in_file(file)
         binary 			 = self.hex_string_to_binary_string(ccsds_hex_string)
         data 			 = self.decode_ccsds_header(binary)
         return data
 
-    def data_binary_to_ccsds_hex(self,file):
+    def data_hex_to_ccsds_hex(self,data_hex_string):
         """
-        Takes the string input of a raw data binary txt file and outputs
+        Takes the string input of raw data binary and outputs
         the ccsds packet in string hex form
         """
 
@@ -260,8 +259,7 @@ class ccsds(object):
         seqflag = 3
         seqcount = 1
 
-        data_binary_string  = self.read_in_file(file)
-        data_hex_string     = self.binary_to_hex_string(data_binary_string)
+        #data_hex_string     = self.binary_to_hex_string(data_binary_string)
         data_length         = self.calculate_data_length(data_hex_string)
         ccsds_header_string = self.create_ccsds_header_hex(APID,seqflag,seqcount,data_length)
         ccsds_packet        = self.combine_header_with_data(ccsds_header_string,data_hex_string)
@@ -281,7 +279,6 @@ def main():
     raw_data_file = "src\\CCSDS\\raw_data_for_testing.txt"
     CCSDS_packet_file = "src\\CCSDS\\ccsds_tlm_packet_for_testing.txt"
 
-
     if DEBUG:
         print("Starting from filepath: ",os.getcwd())
         print("")
@@ -295,7 +292,8 @@ def main():
         print("==========================")
         print("")
 
-    data = ccsds_class.ccsds_hex_to_data_binary(CCSDS_packet_file)
+    ccsds_hex_string = ccsds_class.read_in_file(CCSDS_packet_file)
+    data = ccsds_class.ccsds_hex_to_data_binary(ccsds_hex_string)
 
     if DEBUG:
         print("Data remaining excluding header: ")
@@ -311,7 +309,10 @@ def main():
         print("===========================")
         print("")
 
-    packet = ccsds_class.data_binary_to_ccsds_hex(raw_data_file)           
+    data_binary_string  = ccsds_class.read_in_file(raw_data_file)
+    data_hex_string     = ccsds_class.binary_to_hex_string(data_binary_string)
+    packet = ccsds_class.data_hex_to_ccsds_hex(data_hex_string)
+    
 
 if __name__ == "__main__":
     main()
