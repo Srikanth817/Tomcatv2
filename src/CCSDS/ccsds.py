@@ -248,11 +248,18 @@ class ccsds(object):
         data 			 = self.decode_ccsds_header(binary)
         return data
 
-    def data_hex_to_ccsds_hex(self,data_hex_string):
+    def data_hex_to_ccsds_hex(self,imu_hex_string,software_status):
         """
         Takes the string input of raw data binary and outputs
         the ccsds packet in string hex form
         """
+
+        # string the IMU data and software status together
+        data_hex_string = imu_hex_string + software_status
+
+        # create the checksum and add that to the end
+        checksum = self.create_checksum(data_hex_string)
+        data_hex_string = data_hex_string + checksum
 
         # set these as defaults -- !!!could change later!!!
         APID = 1
@@ -265,6 +272,18 @@ class ccsds(object):
         ccsds_packet        = self.combine_header_with_data(ccsds_header_string,data_hex_string)
 
         return ccsds_packet
+
+    def create_checksum(self,data):
+        a = [data[i:i+2] for i in range(0, len(data), 2)] 
+        b = [int(i, 16) for i in a] 
+        c = 256 - sum(b) % 256 
+        checksum = hex(c)[2:]
+
+        if self.debug:
+            print("Checksum: ",checksum)
+
+        return checksum
+
 
 def main():
     """
@@ -308,10 +327,13 @@ def main():
         print("CREATE CCSDS PACKET EXAMPLE")
         print("===========================")
         print("")
+    
+    # create arbitrary software status
+    software_status = '0000'
 
     data_binary_string  = ccsds_class.read_in_file(raw_data_file)
     data_hex_string     = ccsds_class.binary_to_hex_string(data_binary_string)
-    packet = ccsds_class.data_hex_to_ccsds_hex(data_hex_string)
+    packet = ccsds_class.data_hex_to_ccsds_hex(data_hex_string,software_status)
     
 
 if __name__ == "__main__":

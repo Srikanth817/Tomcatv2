@@ -36,11 +36,11 @@ class imu_data(object):
         packet = ccsds.data_hex_to_ccsds_hex(data_hex_string)
         return packet
 
-    def bytestring_to_ccsds_packet(self,bytestring):
-        data_hex = self.bytestring_to_hex(bytestring)
-        packet = self.ccsds_wrap(data_hex)
-
-        return packet
+#    def bytestring_to_ccsds_packet(self,bytestring):
+#        data_hex = self.bytestring_to_hex(bytestring)
+#        packet = self.ccsds_wrap(data_hex)
+#
+#        return packet
 
 def main():
     """
@@ -49,6 +49,7 @@ def main():
     DEBUG = True
 
     # instatiate class & set debug to true
+    ccsds = ccsds_class.ccsds(debug=DEBUG)
     imu_class = imu_data(debug=DEBUG)
 
     if DEBUG:
@@ -65,16 +66,14 @@ def main():
         print("")
    
     #example bytestring:
-    bytestring = b"\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA" 
-    
-    if DEBUG:
-        print(bytestring)
+    bytestring = b"\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA"
+
+    # create arbitrary software status
+    software_status = 'CC'
 
     # convert to CCSDS packet
-    packet = imu_class.bytestring_to_ccsds_packet(bytestring)
-    
-    if DEBUG:
-        print(packet)
+    data_hex = imu_class.bytestring_to_hex(bytestring)
+    packet = ccsds.data_hex_to_ccsds_hex(data_hex,software_status)
 
 if __name__ == "__main__":
     main()
