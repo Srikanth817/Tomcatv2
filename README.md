@@ -12,6 +12,7 @@ g++ XsensIMU.cpp XsensIMU.h imutest.cpp -o imu
 
 Right now it just takes 200 measurements, writes them to telem.txt, and streams the data over UDP port 5007 on 127.0.0.1
 
+## Wiring Setup
 The following pins need to be connected: SCL, SDA, 3.3V, GND, and DRDY. DRDY should be connected to GPIO 48, which is header pin 15.
 
 ## Troubleshooting
