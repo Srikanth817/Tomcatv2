@@ -15,6 +15,8 @@ Right now it just takes 200 measurements, writes them to telem.txt, and streams 
 ## Wiring Setup
 The following pins need to be connected: SCL, SDA, 3.3V, GND, and DRDY. DRDY should be connected to GPIO 48, which is header pin 15.
 
+![](images/beaglebone-imu-setup.jpeg)
+
 ## Troubleshooting
 
 *If you are getting IMU read errors, make sure the IMU is on and all the I2C and power pins are connected correctly.
